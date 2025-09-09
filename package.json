@@ -1,0 +1,20 @@
+{
+  "name": "discord-overwatch",
+  "version": "1.0.0",
+  "description": "Discord Chat Bot for Overwatch using Webhooks and Gemini AI",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "config-check": "node config-check.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["discord", "bot", "overwatch", "gemini", "ai"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "discord.js": "^14.22.1",
+    "dotenv": "^17.2.2"
+  }
+}
