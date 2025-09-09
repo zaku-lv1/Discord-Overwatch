@@ -29,29 +29,32 @@ client.on(Events.InteractionCreate, async interaction => {
 
     const channelId = interaction.channel.id;
 
-    if (interaction.commandName === 'summon') {
-        botStates.set(channelId, true);
+    if (interaction.commandName === 'overwatch') {
+        const isActive = botStates.get(channelId);
         
-        const embed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setTitle('🤖 Overwatch AI Bot Summoned!')
-            .setDescription('🎮 You can now ask me anything about Overwatch!\n\nJust type your questions directly in this channel.\nUse `/dismiss` to dismiss me when you\'re done.')
-            .setTimestamp();
+        if (isActive) {
+            // Bot is active, so dismiss it
+            botStates.delete(channelId);
+            
+            const embed = new EmbedBuilder()
+                .setColor(0xFF9900)
+                .setTitle('👋 Overwatch AIボットが退出しました！')
+                .setDescription('`/overwatch` コマンドでいつでも再召喚できます。')
+                .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
-        return;
-    }
+            await interaction.reply({ embeds: [embed], ephemeral: true });
+        } else {
+            // Bot is not active, so summon it
+            botStates.set(channelId, true);
+            
+            const embed = new EmbedBuilder()
+                .setColor(0x0099FF)
+                .setTitle('🤖 Overwatch AIボットが召喚されました！')
+                .setDescription('🎮 Overwatchについて何でも質問してください！\n\nこのチャンネルで直接質問を入力してください。\n終了する場合は `/overwatch` コマンドを再度使用してください。')
+                .setTimestamp();
 
-    if (interaction.commandName === 'dismiss') {
-        botStates.delete(channelId);
-        
-        const embed = new EmbedBuilder()
-            .setColor(0xFF9900)
-            .setTitle('👋 Overwatch AI Bot Dismissed!')
-            .setDescription('Use `/summon` to call me back anytime.')
-            .setTimestamp();
-
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+            await interaction.reply({ embeds: [embed], ephemeral: true });
+        }
         return;
     }
 });
@@ -74,12 +77,13 @@ client.on(Events.MessageCreate, async message => {
     try {
         await message.channel.sendTyping();
         
-        const prompt = `You are an expert on Overwatch (the video game by Blizzard Entertainment). 
-        Answer the following question about Overwatch in a helpful and informative way. 
-        If the question is not related to Overwatch, politely redirect the conversation back to Overwatch topics.
-        Keep your response concise but informative.
+        const prompt = `あなたはOverwatch（Blizzard Entertainmentのビデオゲーム）の専門家です。
+        以下のOverwatchに関する質問に、役立つ情報を含む回答をしてください。
+        質問がOverwatchに関連していない場合は、丁寧にOverwatchの話題に誘導してください。
+        回答は簡潔でありながら情報が豊富になるようにしてください。
+        日本語で回答してください。
         
-        Question: ${content}`;
+        質問: ${content}`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -96,7 +100,7 @@ client.on(Events.MessageCreate, async message => {
         }
     } catch (error) {
         console.error('Error generating AI response:', error);
-        await message.reply('❌ Sorry, I encountered an error while processing your question. Please try again later.');
+        await message.reply('❌ 申し訳ございませんが、質問の処理中にエラーが発生しました。後でもう一度お試しください。');
     }
 });
 

@@ -3,11 +3,8 @@ const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 
 const commands = [
     new SlashCommandBuilder()
-        .setName('summon')
-        .setDescription('Summon the Overwatch AI Bot to this channel'),
-    new SlashCommandBuilder()
-        .setName('dismiss')
-        .setDescription('Dismiss the Overwatch AI Bot from this channel'),
+        .setName('overwatch')
+        .setDescription('Overwatch AIボットを召喚/退出させます (Toggle Overwatch AI Bot)'),
 ].map(command => command.toJSON());
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);

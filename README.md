@@ -1,22 +1,22 @@
 # Discord-Overwatch
 
-A Discord Chat Bot that answers questions about Overwatch using Google's Gemini AI. Users can summon and dismiss the AI bot using slash commands to freely ask questions about the game.
+A Discord Chat Bot that answers questions about Overwatch using Google's Gemini AI with Japanese support. Users can toggle the AI bot using a single slash command to freely ask questions about the game.
 
 ## Features
 
-- 🤖 **AI-Powered**: Uses Google Gemini AI to provide intelligent answers about Overwatch
+- 🤖 **AI-Powered**: Uses Google Gemini AI to provide intelligent answers about Overwatch in Japanese
 - 🎮 **Overwatch Expert**: Specialized in answering questions about Overwatch gameplay, heroes, maps, strategies, and more
-- ⚡ **Slash Commands**: Modern Discord slash commands for summoning and dismissing the bot
-- 🔒 **Private Responses**: Summon/dismiss confirmations are only visible to you
+- ⚡ **Single Toggle Command**: Modern Discord slash command for easy bot control
+- 🔒 **Private Responses**: Toggle confirmations are only visible to you
 - 🎨 **Rich Embeds**: Beautiful embed messages for better user experience
+- 🌐 **Japanese Localization**: Full Japanese language support for all messages
 - 🔧 **Configurable**: Environment-based configuration for easy deployment
 - 📱 **Discord Integration**: Native Discord bot with proper message handling
 
 ## Commands
 
-- `/summon` - Summon the Overwatch AI bot to start answering questions (private response)
-- `/dismiss` - Dismiss the AI bot to stop responding to messages (private response)
-- Ask any Overwatch-related question when the bot is active
+- `/overwatch` - Toggle the Overwatch AI bot (summon if not active, dismiss if active) (private response)
+- Ask any Overwatch-related question in Japanese when the bot is active
 
 ## Setup
 
@@ -131,7 +131,7 @@ The bot uses slash commands which are automatically registered when you run:
 npm run deploy-commands
 ```
 
-No additional configuration is needed - the bot will respond to `/summon` and `/dismiss` commands.
+No additional configuration is needed - the bot will respond to `/overwatch` toggle command.
 
 ## Available Scripts
 
