@@ -4,8 +4,8 @@
   "description": "Discord Chat Bot for Overwatch using Webhooks and Gemini AI",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node index.js",
+    "start": "node start.js",
+    "dev": "node start.js",
     "config-check": "node config-check.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
