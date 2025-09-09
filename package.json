@@ -7,6 +7,7 @@
     "start": "node start.js",
     "dev": "node start.js",
     "config-check": "node config-check.js",
+    "deploy-commands": "node deploy-commands.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["discord", "bot", "overwatch", "gemini", "ai"],

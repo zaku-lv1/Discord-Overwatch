@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Events } = require('discord.js');
+const { Client, GatewayIntentBits, Events, EmbedBuilder } = require('discord.js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Initialize Discord client with necessary intents
@@ -18,17 +18,45 @@ const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 // Bot state management
 const botStates = new Map(); // Track which channels have the bot active
 
-// Bot configuration
-const BOT_PREFIX = process.env.BOT_PREFIX || '!';
-const SUMMON_COMMAND = process.env.SUMMON_COMMAND || 'summon';
-const DISMISS_COMMAND = process.env.DISMISS_COMMAND || 'dismiss';
-
 // When the client is ready, run this code (only once)
 client.once(Events.ClientReady, readyClient => {
     console.log(`✅ Ready! Logged in as ${readyClient.user.tag}`);
 });
 
-// Listen for message events
+// Listen for slash command interactions
+client.on(Events.InteractionCreate, async interaction => {
+    if (!interaction.isChatInputCommand()) return;
+
+    const channelId = interaction.channel.id;
+
+    if (interaction.commandName === 'summon') {
+        botStates.set(channelId, true);
+        
+        const embed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle('🤖 Overwatch AI Bot Summoned!')
+            .setDescription('🎮 You can now ask me anything about Overwatch!\n\nJust type your questions directly in this channel.\nUse `/dismiss` to dismiss me when you\'re done.')
+            .setTimestamp();
+
+        await interaction.reply({ embeds: [embed], ephemeral: true });
+        return;
+    }
+
+    if (interaction.commandName === 'dismiss') {
+        botStates.delete(channelId);
+        
+        const embed = new EmbedBuilder()
+            .setColor(0xFF9900)
+            .setTitle('👋 Overwatch AI Bot Dismissed!')
+            .setDescription('Use `/summon` to call me back anytime.')
+            .setTimestamp();
+
+        await interaction.reply({ embeds: [embed], ephemeral: true });
+        return;
+    }
+});
+
+// Listen for message events (for AI responses)
 client.on(Events.MessageCreate, async message => {
     // Ignore messages from bots
     if (message.author.bot) return;
@@ -36,25 +64,11 @@ client.on(Events.MessageCreate, async message => {
     const channelId = message.channel.id;
     const content = message.content.trim();
 
-    // Handle summon command
-    if (content === `${BOT_PREFIX}${SUMMON_COMMAND}`) {
-        botStates.set(channelId, true);
-        await message.reply('🤖 **Overwatch AI Bot has been summoned!** 🎮\n\nYou can now ask me anything about Overwatch! Just type your questions directly.\nTo dismiss me, use `!dismiss`');
-        return;
-    }
-
-    // Handle dismiss command
-    if (content === `${BOT_PREFIX}${DISMISS_COMMAND}`) {
-        botStates.delete(channelId);
-        await message.reply('👋 **Overwatch AI Bot is now dismissed!** Use `!summon` to call me back anytime.');
-        return;
-    }
-
     // Only respond to questions if bot is active in this channel
     if (!botStates.get(channelId)) return;
 
-    // Ignore command messages when bot is active
-    if (content.startsWith(BOT_PREFIX)) return;
+    // Ignore messages that look like commands (starting with / or !)
+    if (content.startsWith('/') || content.startsWith('!')) return;
 
     // Generate response using Gemini AI for Overwatch-related questions
     try {

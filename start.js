@@ -1,11 +1,12 @@
 require('dotenv').config();
 
 // Configuration validation
-const requiredEnvVars = ['DISCORD_TOKEN', 'GEMINI_API_KEY'];
+const requiredEnvVars = ['DISCORD_TOKEN', 'CLIENT_ID', 'GEMINI_API_KEY'];
 const missingVars = requiredEnvVars.filter(varName => {
     const value = process.env[varName];
     return !value || 
            value === 'your_discord_bot_token_here' || 
+           value === 'your_discord_client_id_here' ||
            value === 'your_gemini_api_key_here';
 });
 
